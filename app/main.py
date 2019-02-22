@@ -2,8 +2,10 @@ import json
 import os
 import random
 import bottle
+import numpy as np
 
-from api import ping_response, start_response, move_response, end_response
+from .api import ping_response, start_response, move_response, end_response
+from .battlesnake import Snake, Board
 
 @bottle.route('/')
 def index():
@@ -39,12 +41,9 @@ def start():
             initialize your snake state here using the
             request's data if necessary.
     """
-    print(json.dumps(data))
-
     color = "#00FF00"
 
     return start_response(color)
-
 
 @bottle.post('/move')
 def move():
@@ -54,9 +53,9 @@ def move():
     TODO: Using the data from the endpoint request object, your
             snake AI must choose a direction to move in.
     """
-    print(json.dumps(data))
-
-    directions = ['up', 'down', 'left', 'right']
+    board = Board(data)
+    directions = board.you.safe_moves(board)
+    print(directions)
     direction = random.choice(directions)
 
     return move_response(direction)
@@ -70,8 +69,6 @@ def end():
     TODO: If your snake AI was stateful,
         clean up any stateful objects here.
     """
-    print(json.dumps(data))
-
     return end_response()
 
 # Expose WSGI app (so gunicorn can find it)
