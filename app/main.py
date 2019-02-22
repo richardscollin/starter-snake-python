@@ -54,8 +54,10 @@ def move():
             snake AI must choose a direction to move in.
     """
     board = Board(data)
+
     directions = board.you.safe_moves(board)
-    print(directions)
+    if not len(directions):
+        directions = ["left", "right", "up", "down"]
     direction = random.choice(directions)
 
     return move_response(direction)
