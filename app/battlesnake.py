@@ -38,6 +38,9 @@ class Board():
         (hx, hy) = snake.head
         self.grid[hx][hy][CellState.SnakeHead] = 1
 
+        (hx, hy) = snake.tail
+        self.grid[hx][hy][CellState.SnakeTail] = 1
+
     def add_food(self, food):
         for coord in food:
             self.grid[coord["x"]][coord["y"]][CellState.Food] = 1
@@ -52,6 +55,7 @@ class Snake():
             body.append((coord["x"], coord["y"]))
         self.body = body
         self.head = body[0]
+        self.tail = body[-1]
         self.length = len(body)
 
     def get_movements(self, coord):
@@ -79,6 +83,6 @@ class Snake():
             (x, y) = coord
             if 0 <= x < board.width and 0 <= y < board.height:
                 cell_state = board.grid[x][y]
-                if not cell_state.any() or cell_state[CellState.Food]:
+                if not cell_state.any() or cell_state[CellState.Food] or cell_state[CellState.SnakeTail]:
                     valid_moves.append(move)
         return valid_moves
